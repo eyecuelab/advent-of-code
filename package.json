@@ -2,10 +2,17 @@
   "name": "advent-of-code",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsx watch index.ts"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6",
+    "npmlog": "7.0.1",
+    "@types/npmlog": "4.1.4"
+  }
 }
