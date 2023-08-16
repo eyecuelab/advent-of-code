@@ -34,10 +34,10 @@ export function dayThree(puzzleInput: Rucksacks): number {
           // add the priority of this item
           const itemPriority = priority(sack[i]);
           sum += itemPriority;
-          log.info(
-            `day-three`,
-            `letter: ${sack[i]}, priority: ${itemPriority}, sum: ${sum}`
-          );
+          // log.info(
+          //   `day-three`,
+          //   `letter: ${sack[i]}, priority: ${itemPriority}, sum: ${sum}`
+          // );
         }
       }
     }

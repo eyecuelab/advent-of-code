@@ -1,3 +1,4 @@
+import log from "npmlog";
 /**
  * eg
 ```
@@ -49,7 +50,7 @@ export function dayOne(stringElfCalories: ElfCaloriesInput): number {
    *   so we need to group each of those into a separate array for each elf
    * - sum each of those number arrays and return the three largest entries?
    */
-  console.log(`received elf input: ${stringElfCalories}`);
+  // log.log(`info`, `day-one`, `received elf input: ${stringElfCalories}`);
 
   const result = stringElfCalories
     .split("\n\n")
@@ -59,6 +60,6 @@ export function dayOne(stringElfCalories: ElfCaloriesInput): number {
     .sort(desc)
     .slice(0, 3)
     .reduce(sum, 0);
-  console.log(result);
+
   return result;
 }
