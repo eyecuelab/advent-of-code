@@ -60,14 +60,14 @@ const scores = [1, 10, 100];
 export function dayThreePartTwo(puzzleInput: Rucksacks): number {
   const arrayOfRucksacks = puzzleInput.split("\n");
   let prioritySum = 0;
+  const groupOne = arrayOfRucksacks.slice(0, 3);
   const [rucksack1, r2, r3] = groupOne.map((r) => r.split(""));
   const uniqueLetter = rucksack1
     .filter((letter) => r2.includes(letter))
     .filter((letter) => r3.includes(letter));
 
-  const groupOne = arrayOfRucksacks.slice(0, 3);
 
-
+ // use multiplication to find uniqueness
 
   const letterRecord: Record<string, number> = {};
 
