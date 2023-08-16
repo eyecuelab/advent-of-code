@@ -45,3 +45,43 @@ export function dayThree(puzzleInput: Rucksacks): number {
     return sum;
   }, 0);
 }
+
+
+type ElfGroup = [string[], string[], string[]];
+
+enum States {
+  NotSeen,
+  Seen,
+  Duplicate
+}
+
+const scores = [1, 10, 100];
+
+export function dayThreePartTwo(puzzleInput: Rucksacks): number {
+  const arrayOfRucksacks = puzzleInput.split("\n");
+  let prioritySum = 0;
+  const [rucksack1, r2, r3] = groupOne.map((r) => r.split(""));
+  const uniqueLetter = rucksack1
+    .filter((letter) => r2.includes(letter))
+    .filter((letter) => r3.includes(letter));
+
+  const groupOne = arrayOfRucksacks.slice(0, 3);
+
+
+
+  const letterRecord: Record<string, number> = {};
+
+  for (let i = 0; i < groupOne.length; i++) {
+    groupOne[i].split("").forEach((letter) => {
+      if (letterRecord[letter]) {
+        letterRecord[letter] += scores[i];
+      } else {
+        letterRecord[letter] = scores[i];
+      }
+    });
+  }
+  const answer = Object.entries(letterRecord).find(
+    ([_, score]) => score === 111
+  );
+  return priority(answer?[0] ?? '');
+}
