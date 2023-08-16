@@ -1,5 +1,5 @@
 import log from "npmlog";
-import { sum } from "../day-one";
+import { sum } from "../day-1";
 
 const Scores = {
   Rock: 1,
