@@ -1,4 +1,5 @@
 import * as v from "vitest";
+import { discoverUniqueLetterAmongRucksacks, findBadgeInRucksacks } from ".";
 
 const THE_ALPHABET_LOWER_AND_UPPER_CASE =
 	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -21,9 +22,8 @@ function createRucksacks(
 	).map(() => {
 		// split the nonshared letters into groups for each sack
 		const letters: string[] = [];
-		const numberOfLetters = Math.floor(
-			Math.random() * lettersThatMayNotBeFullyShared.length,
-		);
+		const numberOfLetters =
+			1 + Math.floor(Math.random() * lettersThatMayNotBeFullyShared.length);
 		for (let i = 0; i < numberOfLetters; i++) {
 			const index = Math.floor(
 				Math.random() * lettersThatMayNotBeFullyShared.length,
@@ -58,41 +58,39 @@ function createRucksacks(
 				contents[i] = randomCommonLetter;
 			}
 		}
-		console.log({ randomCommonLetter, lettersThatMayNotBeFullyShared });
+		console.log({ randomCommonLetter, uniqueLetters });
 		return contents.join("");
 	});
 
 	return rucksackContents.join("\n");
 }
 
-v.describe("comparing String.split to JSON.parse", () => {
-	console.log(createRucksacks(100, 1000));
-	const str = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y";
-	v.bench("String.split", () => {
-		str.split(",");
+v.describe("compare implementations for 3 small rucksacks", () => {
+	const rucksacks = createRucksacks(3, 10);
+	v.bench("discoverUniqueLetterAmongRucksacks", () => {
+		discoverUniqueLetterAmongRucksacks(rucksacks.split("\n"));
 	});
-	v.bench("JSON.parse", () => {
-		JSON.parse("[`${str}`]");
-	});
-});
-
-const elements = "1,".repeat(10000).slice(0, -1);
-
-v.describe("10000 elements", () => {
-	v.bench("String.split", () => {
-		elements.split(",");
-	});
-	v.bench("JSON.parse", () => {
-		JSON.parse("[`${elements}`]");
+	v.bench("findBadgeInRucksacks", () => {
+		findBadgeInRucksacks(rucksacks.split("\n"));
 	});
 });
 
-v.describe("comparing Array.join to JSON.stringify", () => {
-	const arr = Array.from({ length: 10000 }, (_, i) => i);
-	v.bench("join", () => {
-		arr.join(",");
+v.describe("compare implementations for 3 massive rucksack", () => {
+	const rucksacks = createRucksacks(3, 100000);
+	v.bench("discoverUniqueLetterAmongRucksacks", () => {
+		discoverUniqueLetterAmongRucksacks(rucksacks.split("\n"));
 	});
-	v.bench("JSON.stringify", () => {
-		JSON.stringify(arr);
+	v.bench("findBadgeInRucksacks", () => {
+		findBadgeInRucksacks(rucksacks.split("\n"));
+	});
+});
+
+v.describe("compare implementations for many rucksacks", () => {
+	const rucksacks = createRucksacks(50, 200);
+	v.bench("discoverUniqueLetterAmongRucksacks", () => {
+		discoverUniqueLetterAmongRucksacks(rucksacks.split("\n"));
+	});
+	v.bench("findBadgeInRucksacks", () => {
+		findBadgeInRucksacks(rucksacks.split("\n"));
 	});
 });
