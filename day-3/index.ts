@@ -1,4 +1,3 @@
-import log from "npmlog";
 import { TEST_INPUT as input } from "./puzzle-input";
 import npmlog from "npmlog";
 
@@ -47,22 +46,41 @@ export function dayThree(puzzleInput: Rucksacks): number {
 	}, 0);
 }
 
-type ElfGroup = [string[], string[], string[]];
-
-enum States {
-	NotSeen,
-	Seen,
-	Duplicate,
-}
-
 const scores = [1, 10, 100];
+
+export function findBadgeInRucksacks(rucksacks: string[]): string {
+	const letterDict: Record<string, number> = {};
+
+	for (let i = 0; i < rucksacks.length; i++) {
+		const sack = rucksacks[i];
+		for (let j = 0; j < sack.length; j++) {
+			const letter = sack[j];
+			if (!letterDict[letter]) {
+				letterDict[letter] = scores[i];
+			}
+			if (typeof letterDict[letter] && letterDict[letter] < scores[i]) {
+				letterDict[letter] += scores[i];
+			}
+		}
+	}
+	const letter = Object.entries(letterDict).find(([_, score]) => score === 111);
+	if (!letter) {
+		npmlog.info("rucksacks", rucksacks);
+		npmlog.info("letterDict", letterDict);
+		throw new Error("No letter found");
+	}
+	return letter[0];
+}
 
 export function discoverUniqueLetterAmongRucksacks(
 	rucksacks: string[],
 ): string {
-	const smallestRucksack = rucksacks.sort((a, b) => a.length - b.length)[0];
-	const uniqueLetter = smallestRucksack.split("").find((letter) => {
-		return rucksacks.every((rucksack) => rucksack.includes(letter));
+	const setSacks = rucksacks.map((r) => [...new Set(r)]);
+	const smallestRucksack = setSacks.sort((a, b) => a.length - b.length)[0];
+	const uniqueLetter = smallestRucksack.find((letter) => {
+		return setSacks.every((rucksack) =>
+			[...new Set(rucksack)].includes(letter),
+		);
 	});
 	if (!uniqueLetter) {
 		throw new Error("No unique letter found");
@@ -82,27 +100,11 @@ npmlog.info(
 export function dayThreePartTwo(puzzleInput: Rucksacks): number {
 	const arrayOfRucksacks = puzzleInput.split("\n");
 	let prioritySum = 0;
-	const groupOne = arrayOfRucksacks.slice(0, 3);
-	const [rucksack1, r2, r3] = groupOne.map((r) => r.split(""));
-	const uniqueLetter = rucksack1
-		.filter((letter) => r2.includes(letter))
-		.filter((letter) => r3.includes(letter));
-
-	// use multiplication to find uniqueness
-
-	const letterRecord: Record<string, number> = {};
-
-	for (let i = 0; i < groupOne.length; i++) {
-		groupOne[i].split("").forEach((letter) => {
-			if (letterRecord[letter]) {
-				letterRecord[letter] += scores[i];
-			} else {
-				letterRecord[letter] = scores[i];
-			}
-		});
+	for (let i = 0; i < arrayOfRucksacks.length; i += 3) {
+		const group = arrayOfRucksacks.slice(i, i + 3);
+		const uniqueLetter = findBadgeInRucksacks(group);
+		prioritySum += priority(uniqueLetter);
 	}
-	const answer = Object.entries(letterRecord).find(
-		([_, score]) => score === 111,
-	);
-	return priority(answer?.[0] ?? "");
+
+	return prioritySum;
 }
